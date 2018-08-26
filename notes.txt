@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=/Users/akmi/TEMP-WORKS/DANS-BRIDGE-GITHUB/dataverse-bridge-plugin-architecture/bridge-plugin-easy/target/bridge-plugin-easy-0.5-SNAPSHOT.jar -DpomFile=/Users/akmi/TEMP-WORKS/DANS-BRIDGE-GITHUB/dataverse-bridge-plugin-architecture/bridge-plugin-easy/pom.xml
