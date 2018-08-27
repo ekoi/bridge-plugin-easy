@@ -1,7 +1,7 @@
 package nl.knaw.dans.dataverse.bridge.plugin.tdr.easy;
 
 import nl.knaw.dans.dataverse.bridge.plugin.exception.BridgeException;
-import nl.knaw.dans.dataverse.bridge.plugin.tdr.easy.util.StateEnum;
+import nl.knaw.dans.dataverse.bridge.plugin.util.StateEnum;
 import org.apache.abdera.model.Category;
 import org.apache.abdera.model.Document;
 import org.apache.abdera.model.Entry;

@@ -2,8 +2,8 @@ package nl.knaw.dans.dataverse.bridge.plugin.tdr.easy;
 
 import nl.knaw.dans.dataverse.bridge.plugin.common.*;
 import nl.knaw.dans.dataverse.bridge.plugin.exception.BridgeException;
-import nl.knaw.dans.dataverse.bridge.plugin.tdr.easy.util.StateEnum;
 import nl.knaw.dans.dataverse.bridge.plugin.util.BridgeHelper;
+import nl.knaw.dans.dataverse.bridge.plugin.util.StateEnum;
 import org.apache.abdera.i18n.iri.IRI;
 import org.apache.abdera.model.Entry;
 import org.apache.abdera.model.Link;
@@ -117,12 +117,6 @@ public class EasyIngestAction implements IAction {
         }
         return easyResponseDataHolder;
     }
-
-    @Override
-    public void save() throws BridgeException {
-
-    }
-
 
     private DigestInputStream getDigestInputStream(File bagitZipFile) throws FileNotFoundException, NoSuchAlgorithmException {
         FileInputStream fis = new FileInputStream(bagitZipFile);

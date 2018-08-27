@@ -127,7 +127,6 @@ public class EasyTransformer implements ITransform {
                             boolean restrictedFile = (FilePermissionChecker.check(url) == FilePermissionChecker.PermissionStatus.RESTRICTED);
                             if (restrictedFile) {
                                 Node restrictedNode = doc.createElement("restricted");
-                                //restrictedNode.setNodeValue("true");
                                 Text nodeVal = doc.createTextNode("true");
                                 restrictedNode.appendChild(nodeVal);
                                 otherMatElement.appendChild(restrictedNode);

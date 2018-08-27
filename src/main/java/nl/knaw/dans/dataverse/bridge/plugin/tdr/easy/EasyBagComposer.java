@@ -59,10 +59,17 @@ public class EasyBagComposer implements IBagitComposer {
     private void createDdiAndJsonXml(String ddiEportUrl) throws BridgeException {
 
         try {
-            FileUtils.copyURLToFile(new URL(ddiEportUrl), new File(bagTempDir + "/data/" +getExportedDvFilename(ddiEportUrl,"xml")));
+            String ddiFilename = getExportedDvFilename(ddiEportUrl,"xml");
+            LOG.info("Creating DDI file. Filename: " + ddiFilename + ". From " + ddiEportUrl);
+            FileUtils.copyURLToFile(new URL(ddiEportUrl), new File(bagTempDir + "/data/" + ddiFilename));
+            LOG.info("Creating " + ddiFilename + " is finished.");
+            LOG.info("Creating JSON file from " + ddiEportUrl);
+            String jsonFilename = getExportedDvFilename(ddiEportUrl, "json");
+            LOG.info("Creating JSON file. Filename: " + jsonFilename + ". From " + ddiEportUrl);
             //json: http://ddvn.dans.knaw.nl:8080/api/datasets/:persistentId/?persistentId=hdl:12345/JLO8HN
             FileUtils.copyURLToFile(new URL(ddiEportUrl.replace("export?exporter=ddi&", ":persistentId/?"))
-                    ,  new File(bagTempDir + "/data/" +getExportedDvFilename(ddiEportUrl, "json")));
+                    ,  new File(bagTempDir + "/data/" + jsonFilename));
+            LOG.info("Creating " + jsonFilename + " is finished.");
         } catch (IOException e) {
             throw new BridgeException("Error creating during creating DDI and Json xml ", e, this.getClass());
         }
@@ -113,7 +120,9 @@ public class EasyBagComposer implements IBagitComposer {
 
         for (Map.Entry<String, String> publicFile : dvFileList.getPublicFiles().entrySet()){
             try {
+                LOG.info("Starting download public file '" + publicFile.getKey() + " from " + publicFile.getValue());
                 FileUtils.copyURLToFile(new URL(publicFile.getValue()),  new File(bagTempDir + "/data/" + publicFile.getKey()));
+                LOG.info("Download public file "+ publicFile.getKey() + " is finished.");
             } catch (IOException e) {
                 throw new BridgeException("[downloadFiles] Public File. URL: " + publicFile.getValue()
                         + " File name: " + publicFile.getKey() + "; errror msg: " + e.getMessage(), e, this.getClass());
@@ -121,7 +130,9 @@ public class EasyBagComposer implements IBagitComposer {
         }
         for (Map.Entry<String, String> restrictedFile : dvFileList.getRestrictedFiles().entrySet()){
             try {
+                LOG.info("Starting download restricted file '" + restrictedFile.getKey() + " from " + restrictedFile.getValue());
                 FileUtils.copyURLToFile(new URL(restrictedFile.getValue() + "?key=" + dvFileList.getApiToken()), new File(bagTempDir + "/data/" + restrictedFile.getKey()));
+                LOG.info("Download public file "+ restrictedFile.getKey() + " is finished.");
             } catch (IOException e) {
                 throw new BridgeException("[downloadFiles] - Restricted File. URL: " + restrictedFile.getValue()
                         + " File name: " + restrictedFile.getKey() + "; errror msg: " + e.getMessage(), e, this.getClass());
