@@ -134,6 +134,9 @@ public class EasyIngestAction implements IAction {
                 Thread.sleep(checkingTimePeriod);
                 LOG.info("Checking deposit status ... ");
                 response = http.execute(new HttpGet(statUri));
+                if (response.getStatusLine().getStatusCode() != 200)
+                    throw new BridgeException("Status code != 200.  statUri: " + statUri, this.getClass());
+
                 easyResponseDataHolder = new EasyResponseDataHolder(response.getEntity().getContent());
                 String state = easyResponseDataHolder.getState();
                 LOG.info("Response state from EASY: " + state);

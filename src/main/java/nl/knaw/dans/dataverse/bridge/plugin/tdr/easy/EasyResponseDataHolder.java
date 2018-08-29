@@ -32,6 +32,12 @@ public class EasyResponseDataHolder extends nl.knaw.dans.dataverse.bridge.plugin
     public void init(InputStream inputStream) throws BridgeException {
         try {
             feedXml = IOUtils.toString(inputStream, "UTF-8");
+            //Eko says, we can validate the feedXml by using javax.xml.validation.Validator
+            //But this simple check is enough for now.
+            if (feedXml == null || feedXml.isEmpty() ) {
+                LOG.error("feedXml is null or empty");
+                throw new BridgeException("init() - feed is null or empty", this.getClass());
+            }
             LOG.info(feedXml);
         } catch (IOException e) {
             throw new BridgeException(e.getMessage(), e, this.getClass());
