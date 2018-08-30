@@ -36,6 +36,7 @@ public class EasyBagComposer implements IBagitComposer {
     private Path bagTempDir;
     @Override
     public File buildBag(String bagitBaseDir, String srcExportedUrl, Map<String, String> transformedXml, DvFileList dvFileList) throws BridgeException {
+        LOG.info("Build bag....  Bagit base dir: " + bagitBaseDir);
         bagTempDir = createTempDirectory(bagitBaseDir);
         Path metadataDir = createMetadataDir();
         createDdiAndJsonXml(srcExportedUrl);
@@ -140,7 +141,7 @@ public class EasyBagComposer implements IBagitComposer {
                 FileUtils.copyURLToFile(new URL(restrictedFile.getValue() + "?key=" + dvFileList.getApiToken()), new File(bagTempDir + "/data/" + restrictedFile.getKey()));
                 Instant finish = Instant.now();
                 long timeElapsed = Duration.between(start, finish).getSeconds();
-                LOG.info("Download public file "+ restrictedFile.getKey() + " is done in " + timeElapsed + " seconds.");
+                LOG.info("**** Download public file "+ restrictedFile.getKey() + " is done in " + timeElapsed + " seconds.");
             } catch (IOException e) {
                 throw new BridgeException("[downloadFiles] - Restricted File. URL: " + restrictedFile.getValue()
                         + " File name: " + restrictedFile.getKey() + "; errror msg: " + e.getMessage(), e, this.getClass());
