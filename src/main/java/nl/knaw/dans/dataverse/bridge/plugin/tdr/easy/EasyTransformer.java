@@ -99,7 +99,6 @@ public class EasyTransformer implements ITransform {
             StringWriter writer = new StringWriter();
             transformer.transform(new DOMSource(doc), new StreamResult(writer));
             datasetXml = writer.toString();
-            LOG.info(datasetXml);
         } catch (TransformerConfigurationException e) {
             LOG.error("ERROR: transformToDataset - TransformerConfigurationException, caused by: " + e.getMessage());
             throw new BridgeException("transformToDataset - TransformerConfigurationException, caused by: " + e.getMessage()

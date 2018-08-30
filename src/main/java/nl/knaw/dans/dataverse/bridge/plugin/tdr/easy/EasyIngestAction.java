@@ -182,7 +182,7 @@ public class EasyIngestAction implements IAction {
         EasyResponseDataHolder easyResponseDataHolder;
         CloseableHttpResponse response;
         LOG.info("Checking Time Period: " + checkingTimePeriod + " milliseconds.");
-        LOG.info("Start polling Stat-IRI for the current status of the deposit, waiting {} seconds before every request ...", checkingTimePeriod);
+        LOG.info("Start polling Stat-IRI for the current status of the deposit, waiting {} milliseconds before every request ...", checkingTimePeriod);
         while (true) {
             try {
                 Thread.sleep(checkingTimePeriod);
