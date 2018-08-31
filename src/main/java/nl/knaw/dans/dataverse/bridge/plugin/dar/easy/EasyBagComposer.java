@@ -1,4 +1,4 @@
-package nl.knaw.dans.dataverse.bridge.plugin.tdr.easy;
+package nl.knaw.dans.dataverse.bridge.plugin.dar.easy;
 
 import gov.loc.repository.bagit.Bag;
 import gov.loc.repository.bagit.BagFactory;
@@ -163,13 +163,21 @@ public class EasyBagComposer implements IBagitComposer {
     }
 
     private File createBagitZip() throws BridgeException {
+        LOG.info("Creating bagit zip: {}.zip.", bagTempDir.toFile().getAbsolutePath());
         File zipFile = new File(bagTempDir.toFile().getAbsolutePath() + ".zip");
         try {
             BridgeHelper.zipDirectory(bagTempDir.toFile(), zipFile);
+            boolean bagDirIsDeleted = FileUtils.deleteQuietly(bagTempDir.toFile());
+            if (bagDirIsDeleted)
+                LOG.info("{} file is deleted.", bagTempDir.toFile().getAbsolutePath());
+            else
+                LOG.warn("Deleting {} file is failed.", bagTempDir.toFile().getAbsolutePath());
+
         } catch (ZipException e) {
-            throw new BridgeException("createBagitZip, msg: " + e.getMessage(), e, this.getClass());
+            throw new BridgeException("createBagitZip is faild, msg: " + e.getMessage(), e, this.getClass());
 
         }
+        LOG.info("{} is created.", zipFile.getName());
         return zipFile;
     }
 
@@ -185,8 +193,10 @@ public class EasyBagComposer implements IBagitComposer {
     private void createDatasetXmlFile(Path metadataDir, String datasetXml) throws BridgeException {
         File datasetXmlFile = new File(metadataDir + "/dataset.xml");
         try {
-            datasetXmlFile.createNewFile();
-            Files.write(datasetXmlFile.toPath(), datasetXml.getBytes());;
+            boolean newXmlFileIsCreated = datasetXmlFile.createNewFile();
+            if (!newXmlFileIsCreated)
+                throw new BridgeException("Failed to create dataset.xml file", this.getClass());
+            Files.write(datasetXmlFile.toPath(), datasetXml.getBytes());
         } catch (IOException e) {
             String msg = "createDatasetXmlFile, msg: " + e.getMessage();
             LOG.error("ERROR: " , msg);

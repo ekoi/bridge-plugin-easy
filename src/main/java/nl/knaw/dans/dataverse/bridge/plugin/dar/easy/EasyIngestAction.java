@@ -1,4 +1,4 @@
-package nl.knaw.dans.dataverse.bridge.plugin.tdr.easy;
+package nl.knaw.dans.dataverse.bridge.plugin.dar.easy;
 
 import nl.knaw.dans.dataverse.bridge.plugin.common.*;
 import nl.knaw.dans.dataverse.bridge.plugin.exception.BridgeException;
@@ -32,7 +32,7 @@ import java.util.Optional;
     @author Eko Indarto
  */
 public class EasyIngestAction implements IAction {
-    ITransform iTransform = new EasyTransformer();
+    private ITransform iTransform = new EasyTransformer();
     private static final Logger LOG = LoggerFactory.getLogger(EasyIngestAction.class);
     private static final int timeout = 600000;
     private static final int chunkSize = 104857600;//100MB
@@ -40,8 +40,7 @@ public class EasyIngestAction implements IAction {
     @Override
     public Map<String, String> transform(String ddiExportUrl, String apiToken, List<XslStreamSource> xslStreamSource) throws BridgeException {
         iTransform = new EasyTransformer();
-        Map<String, String> transformResult = iTransform.getTransformResult(ddiExportUrl, apiToken, xslStreamSource);
-        return transformResult;
+        return iTransform.getTransformResult(ddiExportUrl, apiToken, xslStreamSource);
     }
 
     @Override
@@ -55,7 +54,7 @@ public class EasyIngestAction implements IAction {
 
     @Override
     public EasyResponseDataHolder execute(Optional<File> baggitZippedFileOpt, IRI colIri, String uid, Optional<String> pwd) throws BridgeException {
-        EasyResponseDataHolder easyResponseDataHolder = null;
+        EasyResponseDataHolder easyResponseDataHolder;
         long checkingTimePeriod = 5000;
         try {
             File bagitZippedFile = baggitZippedFileOpt.get();
@@ -122,15 +121,15 @@ public class EasyIngestAction implements IAction {
             LOG.info(easyResponseDataHolder.getState());
         } catch (FileNotFoundException e) {
             LOG.error("FileNotFoundException: " + e.getMessage());
-            new BridgeException("execute - FileNotFoundException, msg: " + e.getMessage(), e, this.getClass());
+            throw new BridgeException("execute - FileNotFoundException, msg: " + e.getMessage(), e, this.getClass());
         } catch (NoSuchAlgorithmException e) {
             LOG.error("NoSuchAlgorithmException: " + e.getMessage());
-            new BridgeException("execute - NoSuchAlgorithmException, msg: " + e.getMessage(), e, this.getClass());
+            throw new BridgeException("execute - NoSuchAlgorithmException, msg: " + e.getMessage(), e, this.getClass());
         } catch (URISyntaxException e) {
             LOG.error("URISyntaxException: " + e.getMessage());
-            new BridgeException("execute - URISyntaxException, msg: " + e.getMessage(), e, this.getClass());
+            throw new BridgeException("execute - URISyntaxException, msg: " + e.getMessage(), e, this.getClass());
         } catch (IOException e) {
-            new BridgeException("execute - IOException, msg: " + e.getMessage(), e, this.getClass());
+            throw new BridgeException("execute - IOException, msg: " + e.getMessage(), e, this.getClass());
         }
         return easyResponseDataHolder;
     }
@@ -146,7 +145,7 @@ public class EasyIngestAction implements IAction {
     }
 
     private String formatFileSize(long size) {
-        String hrSize = null;
+        String hrSize;
 
         double b = size;
         double k = size/1024.0;

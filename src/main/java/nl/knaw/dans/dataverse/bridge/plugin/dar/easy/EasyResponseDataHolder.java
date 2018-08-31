@@ -1,4 +1,4 @@
-package nl.knaw.dans.dataverse.bridge.plugin.tdr.easy;
+package nl.knaw.dans.dataverse.bridge.plugin.dar.easy;
 
 import nl.knaw.dans.dataverse.bridge.plugin.exception.BridgeException;
 import nl.knaw.dans.dataverse.bridge.plugin.util.StateEnum;

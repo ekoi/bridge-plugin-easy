@@ -1,10 +1,10 @@
-package nl.knaw.dans.dataverse.bridge.plugin.tdr.easy;
+package nl.knaw.dans.dataverse.bridge.plugin.dar.easy;
 
 import nl.knaw.dans.dataverse.bridge.plugin.common.DvFileList;
 import nl.knaw.dans.dataverse.bridge.plugin.common.ITransform;
 import nl.knaw.dans.dataverse.bridge.plugin.common.XslStreamSource;
 import nl.knaw.dans.dataverse.bridge.plugin.exception.BridgeException;
-import nl.knaw.dans.dataverse.bridge.plugin.tdr.easy.util.FilePermissionChecker;
+import nl.knaw.dans.dataverse.bridge.plugin.dar.easy.util.FilePermissionChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -70,13 +70,13 @@ public class EasyTransformer implements ITransform {
             if (xsltSourceDatasetXml.isPresent())
                 cachedXSLTDataset = transFact.newTemplates(xsltSourceDatasetXml.get().getXslSource());
             else
-                new BridgeException("xsltSourceList of dataset.xml is not found", this.getClass());
+                throw new BridgeException("xsltSourceList of dataset.xml is not found", this.getClass());
 
             Optional<XslStreamSource> xsltSourceFilesXml = xslStreamSourceList.stream().filter(x -> x.getXslName().equals("files.xml")).findAny();
             if (xsltSourceFilesXml.isPresent())
                 cachedXSLTFiles = transFact.newTemplates(xsltSourceFilesXml.get().getXslSource());
             else
-                new BridgeException("xsltSourceList of files.xml is not found", this.getClass());
+                throw new BridgeException("xsltSourceList of files.xml is not found", this.getClass());
 
         } catch (TransformerConfigurationException e) {
             LOG.error("ERROR: TransformerConfigurationException, caused by: " + e.getMessage());
@@ -162,7 +162,7 @@ public class EasyTransformer implements ITransform {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentBuilder builder;
-        Document doc = null;
+        Document doc;
         try {
             builder = factory.newDocumentBuilder();
             doc = builder.parse(dvDdiMetadataUrl);
@@ -222,7 +222,7 @@ public class EasyTransformer implements ITransform {
     private Document loadXMLFromString(String xml) throws BridgeException
     {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = null;
+        DocumentBuilder builder;
         try {
             builder = factory.newDocumentBuilder();
             InputSource is = new InputSource(new StringReader(xml));

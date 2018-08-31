@@ -1,4 +1,4 @@
-package nl.knaw.dans.dataverse.bridge.plugin.tdr.easy.util;
+package nl.knaw.dans.dataverse.bridge.plugin.dar.easy.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
