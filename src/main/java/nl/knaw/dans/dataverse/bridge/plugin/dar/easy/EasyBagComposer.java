@@ -34,6 +34,7 @@ public class EasyBagComposer implements IBagitComposer {
     private static final Logger LOG = LoggerFactory.getLogger(EasyBagComposer.class);
     private Path bagitDir;
     private Path bagTempDir;
+    private static long MAX_FILESIZE = 2147483648L;
     @Override
     public File buildBag(String bagitBaseDir, String srcExportedUrl, Map<String, String> transformedXml, DvFileList dvFileList) throws BridgeException {
         LOG.info("Build bag....  Bagit base dir: " + bagitBaseDir);
@@ -125,10 +126,16 @@ public class EasyBagComposer implements IBagitComposer {
             try {
                 LOG.info("**** Starting download public file '" + publicFile.getKey() + " from " + publicFile.getValue());
                 Instant start = Instant.now();
-                FileUtils.copyURLToFile(new URL(publicFile.getValue()),  new File(bagTempDir + "/data/" + publicFile.getKey()));
+                File downloadedPublicFile = new File(bagTempDir + "/data/" + publicFile.getKey());
+                FileUtils.copyURLToFile(new URL(publicFile.getValue()),  downloadedPublicFile);
                 Instant finish = Instant.now();
                 long timeElapsed = Duration.between(start, finish).getSeconds();
                 LOG.info("**** Download public file "+ publicFile.getKey() + " is done in " + timeElapsed + " seconds.");
+                if (downloadedPublicFile.length() > MAX_FILESIZE){
+                    String msg = publicFile.getKey() + " (" + publicFile.getValue() +") has size more than 2G. Actual size: " + downloadedPublicFile.length() + " bytes.";
+                    LOG.error(msg);
+                    throw new BridgeException(msg, this.getClass());
+                }
             } catch (IOException e) {
                 throw new BridgeException("[downloadFiles] Public File. URL: " + publicFile.getValue()
                         + " File name: " + publicFile.getKey() + "; errror msg: " + e.getMessage(), e, this.getClass());
@@ -138,10 +145,16 @@ public class EasyBagComposer implements IBagitComposer {
             try {
                 LOG.info("**** Starting download restricted file '" + restrictedFile.getKey() + " from " + restrictedFile.getValue());
                 Instant start = Instant.now();
-                FileUtils.copyURLToFile(new URL(restrictedFile.getValue() + "?key=" + dvFileList.getApiToken()), new File(bagTempDir + "/data/" + restrictedFile.getKey()));
+                File downloadedRestrictedFile = new File(bagTempDir + "/data/" + restrictedFile.getKey());
+                FileUtils.copyURLToFile(new URL(restrictedFile.getValue() + "?key=" + dvFileList.getApiToken()), downloadedRestrictedFile);
                 Instant finish = Instant.now();
                 long timeElapsed = Duration.between(start, finish).getSeconds();
                 LOG.info("**** Download public file "+ restrictedFile.getKey() + " is done in " + timeElapsed + " seconds.");
+                if (downloadedRestrictedFile.length() > MAX_FILESIZE){
+                    String msg = restrictedFile.getKey() + " (" + restrictedFile.getValue() + ") has size more than 2G. Actual size: " + downloadedRestrictedFile.length() + " bytes.";
+                    LOG.error(msg);
+                    throw new BridgeException(msg, this.getClass());
+                }
             } catch (IOException e) {
                 throw new BridgeException("[downloadFiles] - Restricted File. URL: " + restrictedFile.getValue()
                         + " File name: " + restrictedFile.getKey() + "; errror msg: " + e.getMessage(), e, this.getClass());

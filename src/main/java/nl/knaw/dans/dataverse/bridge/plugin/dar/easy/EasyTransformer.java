@@ -42,16 +42,16 @@ public class EasyTransformer implements ITransform {
     private Templates cachedXSLTFiles;
     private String datasetXml;
     private String filesXml;
-    private XPath xPath = XPathFactory.newInstance().newXPath();
-    private Map<String, String> restrictedFiles = new HashMap<String, String>();
-    private Map<String, String> publicFiles = new HashMap<String, String>();
+    private final XPath xPath = XPathFactory.newInstance().newXPath();
+    private final Map<String, String> restrictedFiles = new HashMap<>();
+    private final Map<String, String> publicFiles = new HashMap<>();
 
     @Override
     public Map<String, String> getTransformResult(String dvDdiMetadataUrl, String apiToken, List<XslStreamSource> xslStreamSourceList) throws BridgeException {
         this.dvDdiMetadataUrl = dvDdiMetadataUrl;
         init(xslStreamSourceList);
         build();
-        Map<String, String> transformResult = new HashMap<String, String>();
+        Map<String, String> transformResult = new HashMap<>();
         transformResult.put("dataset.xml", datasetXml);
         transformResult.put("files.xml", filesXml);
         return transformResult;

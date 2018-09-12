@@ -34,7 +34,7 @@ import java.util.Optional;
 public class EasyIngestAction implements IAction {
     private ITransform iTransform = new EasyTransformer();
     private static final Logger LOG = LoggerFactory.getLogger(EasyIngestAction.class);
-    private static final int timeout = 600000;
+    private static final int timeout = 600000; //10 minutes
     private static final int chunkSize = 104857600;//100MB
 
     @Override
@@ -64,7 +64,7 @@ public class EasyIngestAction implements IAction {
             LOG.info(bagitZippedFile.getName() + " has size: " + formatFileSize(bagitZippedFileSize));
             int numberOfChunks = 0;
             if (bagitZippedFileSize > chunkSize) {
-                numberOfChunks = getNumberOfChunks(bagitZippedFileSize, chunkSize);
+                numberOfChunks = getNumberOfChunks(bagitZippedFileSize);
                 LOG.info("The '" + bagitZippedFile.getName() + "' file will send to EASY in partly, " + numberOfChunks + " times, each " + formatFileSize(chunkSize));
             }
 
@@ -134,7 +134,7 @@ public class EasyIngestAction implements IAction {
         return easyResponseDataHolder;
     }
 
-    private int getNumberOfChunks(long filesize, long chunkSize) {
+    private int getNumberOfChunks(long filesize) {
         int numberOfChunk = 0;
         if ((filesize%chunkSize) != 0)
             numberOfChunk = 1;
